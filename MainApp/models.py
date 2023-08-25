@@ -15,3 +15,6 @@ class Snippet(models.Model):
     creation_date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
     public = models.BooleanField(default=True)  # True - public, False - private
+
+    def __repr__(self):
+        return f'Snippet({self.id}, {self.name}, {self.lang}, {self.user})'
