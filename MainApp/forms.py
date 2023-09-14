@@ -9,7 +9,7 @@ class SnippetForm(ModelForm):
         model = Snippet
         # Описываем поля, которые будем заполнять в форме
         fields = ['name', 'lang', 'code', 'public']
-        labels = {'name': '', 'lang': '', 'code': '', 'public': ''}
+        labels = {'name': '', 'lang': '', 'code': '', 'public': 'Сделать публичным'}
         widgets = {
             'name': TextInput(attrs={'placeholder': 'Название сниппета'}),
             'code': Textarea(attrs={'placeholder': 'Код сниппета'}),

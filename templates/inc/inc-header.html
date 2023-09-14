@@ -54,6 +54,7 @@
                     <div class="dropdown-divider"></div>
                 </div>
             </div>
+            <a style="padding-left: 10px" href="{% url 'register' %}" type="button">Регистрация</a>
                 {% if errors %}
                     <ul>
                     {% for error in errors %}
@@ -62,7 +63,7 @@
                     </ul>
                 {% endif %}
             {% endif %}
-            <a style="padding-left: 10px" href="{% url 'register' %}" type="button">Регистрация</a>
+            
         </div>
     </nav>
 </header>
