@@ -1,4 +1,4 @@
-# Snippets_2108
+# Snippets
 ## Инструкция по развертыванию проекта
 
 1. `python3 -m venv venv_name` - создание venv
