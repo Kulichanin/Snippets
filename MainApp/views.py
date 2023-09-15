@@ -1,15 +1,31 @@
 from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import render, redirect
-from MainApp.models import Snippet
-from MainApp.forms import SnippetForm, UserRegistrationForm
+from MainApp.models import Snippet, Comment
+from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 
 
 def index_page(request):
-    context = {'pagename': 'PythonBin'}
-    return render(request, 'pages/index.html', context)
+
+    if request.method == "GET":
+        context = {'pagename': 'PythonBin'}
+        return render(request, 'pages/index.html', context)
+    
+    if request.method == 'POST':
+        try:
+            snippet = Snippet.objects.get(id=request.POST['snippet_id'])
+        except ObjectDoesNotExist:
+            raise Http404
+        context = {
+            'pagename': 'Просмотр сниппета',
+            'snippet': snippet,
+            'type': 'view'
+            }
+        return render(request, 'pages/snippet_detail.html', context)
+        
 
 
 @login_required
@@ -58,11 +74,13 @@ def snippets_page(request):
 def snippet_detail(request, snippet_id):
     try:
         snippet = Snippet.objects.get(id=snippet_id)
+        comments = Comment.objects.filter(snippet=snippet_id)
     except ObjectDoesNotExist:
         raise Http404
     context = {
         'pagename': 'Просмотр сниппета',
         'snippet': snippet,
+        'comments': comments,
         'type': 'view'
         }
     return render(request, 'pages/snippet_detail.html', context)
@@ -98,6 +116,30 @@ def snippet_edit(request, snippet_id):
         snippet.public = data_form.get("public", False)
         snippet.save()
         return redirect("snippets-list")
+
+
+@login_required
+def comment_add(request,snippet_id):
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST, request.FILES)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = request.user
+            comment.snippet = Snippet.objects.get(id=snippet_id)  
+            comment.text = comment_form.data['text']
+            comment.image = request.FILES['image']
+            comment.save()
+            return redirect(f'/snippet/{snippet_id}')
+    comment_form = CommentForm()
+    snippet = Snippet.objects.get(id=snippet_id)
+    context = {
+            'pagename': 'Просмотр снипета',
+            'comment_form':comment_form,
+            'snippet': snippet,
+            'type': 'view'
+        }
+    return render(request, f'pages/snippet_detail.html', context)
+
 
 
 def create_user(request):

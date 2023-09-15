@@ -19,9 +19,19 @@ class Snippet(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
     public = models.BooleanField(default=True)  # True - public, False - private
     
+    
     # В Админке используется метод __str__()
     def __str__(self):
         return f'Snippet({self.id}, {self.name})'
 
     def __repr__(self):
         return f'Snippet({self.id}, {self.name}, {self.lang}, {self.user})'
+    
+
+class Comment(models.Model):
+    text = models.CharField(max_length=300)
+    creation_date = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    snippet = models.ForeignKey(Snippet, on_delete = models.CASCADE)
+    image = models.ImageField(upload_to="images", null=True)
+

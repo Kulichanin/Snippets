@@ -39,7 +39,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> 
         </fieldset>
         {% elif type == 'edit' %}
         <form action ="" method='post'>
@@ -79,6 +79,38 @@
             <button type="submit"> Обновить </button>
         </form>
         {% endif %}
+
+        <hr>
+        <table border="1">
+            <tr>
+                <th>Автор</th>
+                <th>Комментарий</th>
+                <th>Картинка</th>
+            </tr>
+            {% for comment in comments %}
+            <tr>
+                <td>{{comment.author.username}}</td>
+                <td>{{comment.text}}</td>
+                
+            </tr>
+            {% endfor %}
+        </table>
+
+        <hr>
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'comment-add' snippet.id%}" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            {{comment_form}}
+            <button type="submit">Добавить комментарий</button>
+        </form>
+        {% else %}
+        <div class="row mt-3">
+            <div class="col-4 offset-4">
+                <a>Чтобы добавить комментарий, необходимо пройти авторизацию!</a>
+            </div>
+        </div>
+        {% endif %}
+        <br>
         </div>
     </div>
 </div>

@@ -17,4 +17,5 @@ urlpatterns = [
     path('auth/register', views.create_user, name='register'),
     path('login', views.login, name='login'),
     path('logout', views.logout, name='logout'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('comment/add/<int:snippet_id>', views.comment_add, name="comment-add"),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
